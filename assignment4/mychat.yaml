@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mychat
+  labels:
+    app: mychat
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  selector:
+    app: mychat
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet 
+metadata:
+  name: mychat
+spec:
+  selector:
+    matchLabels:
+      app: mychat
+  serviceName: "mychat"
+  replicas: 1 
+  template:
+    metadata:
+      labels:
+        app: mychat
+    spec:
+      containers:
+      - name: mychat
+        image: yunjun2/mychat:1.1.4
+        ports:
+        - containerPort: 8080

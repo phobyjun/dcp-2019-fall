@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+  mydb:
+    image: yunjun2/mydb:1.0.1
+    restart: always
+    environment:
+      MYSQL_HOST: mydb
+
+  mychat:
+    depends_on:
+      - mydb
+    image: yunjun2/mychat:1.1.4
+    ports:
+      - "12000:8080"
+    links:
+      - mydb:mydb
+    restart: always

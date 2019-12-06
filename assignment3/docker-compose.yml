@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  mydb:
+    image: yunjun2/mydb:1.0.1
+    environment:
+      MYSQL_HOST: mydb
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+      placement:
+        constraints: [node.labels.label == mydb]
+    networks:
+      mynet:
+
+  mychat:
+    depends_on:
+      - mydb
+    image: yunjun2/mychat:1.1.4
+    ports:
+      - "12000:8080"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.labels.label == mychat]
+    networks:
+      mynet:
+
+networks:
+  mynet:
+    name: mynet

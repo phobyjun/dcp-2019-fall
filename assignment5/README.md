@@ -1,25 +1,28 @@
 # Data Center Programming Assignment #5
 
-## CONTENTS:
+2018102211 컴퓨터공학과 윤준석
 
-- [ABSTRACT](#ABSTRACT:)
+## CONTENTS
+
+- [ABSTRACT](#ABSTRACT)
 - [Application](#Application)
   - [mychat](#mychat)
   - [mydb](#mydb)
+  - [docker-compose](#docker-compose)
 - [Kubernetes Migration](#Kubernetes-Migration)
 - [<번외> Google Kubernetes Engine](#<번외>-Google-Kubernetes-Engine)
 
-## ABSTRACT:
+## ABSTRACT
 
-- Socket.io를 이용해 간단한 채팅 웹 어플리케이션을 만들어 보았습니다. 사용자들의 채팅 기록과 이름, 시간은 MySql DB에 저장됩니다. 프론트와 백엔드는 하나의 이미지로 구현하였고 DB도 하나의 이미지로 구현하였습니다. Kubernetes 위에서의 동작 관점에서는 각각의 이미지가 1개의 StatefulSet(pod)과 Service를 가지게 구현했습니다.
+- Socket.io를 이용해 간단한 채팅 웹 어플리케이션을 만들어 보았습니다. 사용자들의 채팅 기록과 이름, 시간은 MySql DB에 저장됩니다. 프론트와 백엔드는 하나의 이미지로 구현하였고 DB도 하나의 이미지로 구현하였습니다. Kubernetes에서는 각각의 이미지가 1개의 StatefulSet(pod)과 Service를 가지게 구현했습니다.
 - 이 프로젝트는 Minikube 위에서의 실행을 가정하고 진행되었으며, 다른 Kubernetes engine을 사용 시 제대로 실행이 되지 않을 수 있습니다.
-- 소스 코드는 다음 링크에서 확인할 수 있습니다. [LINK]( https://github.com/phobyjun/dcp-2019-fall/tree/master/assignment4 )
+- 소스 코드는 다음 링크에서 확인할 수 있습니다. [LINK]( https://github.com/phobyjun/dcp-2019-fall/tree/master/ )
 
 ## Application
 
 ### mychat
 
-- mychat image Link: [LINK]( https://hub.docker.com/repository/docker/yunjun2/mychat ), 1.1.4 version을 기준으로 설명합니다.
+- mychat Image Link: [LINK]( https://hub.docker.com/repository/docker/yunjun2/mychat ), 1.1.4 version을 기준으로 설명합니다.
 
 - 폴더 구조는 다음과 같습니다.
 
@@ -309,7 +312,7 @@
     ALTER USER root IDENTIFIED WITH mysql_native_password BY 'root';
     ```
 
-    메세지가 저장될 messages 테이블을 생성해주고, Container 외부에서 접속할 때 root 계정이 자동으로 생성되지 않으므로 root 계정의 비밀번호를 설정해 주는 sql파일입니다. 이는 build시 DB 생성 후 자동으로 실행됩니다.
+    메세지가 저장될 messages 테이블을 생성해주고, Container 외부에서 접속할 때 root 계정이 자동으로 생성되지 않으므로 root 계정의 비밀번호를 설정해 주는 sql 파일입니다. 이는 build시 DB 생성 후 자동으로 실행됩니다.
 
   - Dockerfile
 
@@ -331,3 +334,195 @@
 
   ![image-20191208203807356](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208203807356.png)
 
+### docker-compose
+
+지금까지 설명한 2개의 이미지를 이용해 manager를 포함한 3대의 docker-machine에 compose 후 2대의 machine사이에서 통신하는 과정을 설명하겠습니다. 
+
+- docker-compose.yml 파일은 다음과 같습니다. 외부 접속 포트를 설정해줄 수 있으며, docker-machine간의 통신을 위해 internal network를 생성해주었습니다.
+
+  ```yaml
+  version: '3.7'
+  
+  services:
+    mydb:
+      image: yunjun2/mydb:1.0.1
+      environment:
+        MYSQL_HOST: mydb
+      deploy:
+        restart_policy:
+          condition: on-failure
+        replicas: 1
+        placement:
+          constraints: [node.labels.label == mydb]
+      networks:
+        mynet:
+  
+    mychat:
+      depends_on:
+        - mydb
+      image: yunjun2/mychat:1.1.4
+      ports:
+        - "12000:8080"
+      deploy:
+        replicas: 1
+        restart_policy:
+          condition: on-failure
+        placement:
+          constraints: [node.labels.label == mychat]
+      networks:
+        mynet:
+  
+  networks:
+    mynet:
+      name: mynet
+  ```
+
+- docker-compose up![image-20191208205156379](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208205156379.png)
+
+- 메세지 전송이 잘 되는것을 볼 수 있습니다.![image-20191208205349435](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208205349435.png)
+
+- DB와 table이 잘 생성되고 통신 또한 잘 되는것을 볼 수 있습니다.![image-20191208205553543](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208205553543.png)
+
+## Kubernetes Migration
+
+앞서 설명한 chatting web application을 Kubernetes로 migration했으며, minikube를 기반으로 진행하였습니다.
+
+- 폴더 구조는 다음과 같습니다.
+
+  ```c
+  kubernetes
+  |	mychat.yaml
+  |	mydb.yaml
+  |	autobuild.sh
+  |	autodelete.sh
+  ```
+
+- 구성 요소 설명은 다음과 같습니다.
+
+  - mychat.yaml
+
+    ```yaml
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: mychat
+      labels:
+        app: mychat
+    spec:
+      ports:
+      - port: 80
+        targetPort: 8080
+        protocol: TCP
+      type: LoadBalancer
+      externalTrafficPolicy: Local
+      selector:
+        app: mychat
+    
+    ---
+    
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: mychat
+    spec:
+      selector:
+        matchLabels:
+          app: mychat
+      serviceName: "mychat"
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            app: mychat
+        spec:
+          containers:
+          - name: mychat
+            image: yunjun2/mychat:1.1.4
+            ports:
+            - containerPort: 8080
+    ```
+
+    1개의 Service와 1개의 StatefulSet을 가지며, LoadBalancer를 통해 cluster 외부에 IP와 Port를 노출시켰습니다. Service에 selector에서 mychat을 가져오는데 이는 StatefulSet에 serviceName을 통해 가져올 수 있습니다.
+
+  - mydb.yaml
+
+    ```yaml
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: mydb
+      labels:
+        app: mydb
+    spec:
+      ports:
+      - port: 3306
+        targetPort: 3306
+        protocol: TCP
+      selector:
+        app: mydb
+    
+    ---
+    
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: mydb
+    spec:
+      selector:
+        matchLabels:
+          app: mydb
+      serviceName: "mydb"
+      template:
+        metadata:
+          labels:
+            app: mydb
+        spec:
+          containers:
+          - name: mydb
+            image: yunjun2/mydb:1.0.1
+            ports:
+            - containerPort: 3306
+    ```
+
+    mychat과 동일한 구성을 가집니다. containerPort를 3306으로 설정해줘야만 mysql에 접속이 가능합니다.
+
+  - autobuild.sh
+
+    ```shell
+    kubectl apply -f mydb.yaml --record
+    kubectl apply -f mychat.yaml --record
+    
+    kubectl patch service mychat \
+      -p '{"spec": {"type": "LoadBalancer", "externalIPs":["'$(minikube ip)'"]}}'
+    ```
+
+    Kubernetes에서 service와 statefulset을 한번에 deploy하기 위해 작성한 shell script 파일입니다. 특이한 점은 `kubectl path ~` 부분인데, 이는 minikube에서 loadbalancer를 사용할 때의 external-ip 할당 문제 때문입니다. minikube에서는 loadbalancer를 사용해 external-ip를 자동으로 할당해줄 수 없습니다. 그러므로 patch 명령어를 사용해 minikube ip를 가져와 수동으로 할당해주었습니다.
+
+  - autodelete.sh
+
+    ```shell
+    kubectl delete service mychat
+    kubectl delete statefulset mychat
+    kubectl delete service mydb
+    kubectl delete statefulset mydb
+    ```
+
+    Kubernetes에 deploy한 service와 statefulset을 stop 후 delete하는 명령어들을 한번에 실행시키기 위한 shell script 파일입니다.
+
+- autobuild.sh 파일을 실행시켜 Kubernetes에서 deploy 해보겠습니다.
+
+  ![image-20191208215225120](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208215225120.png)
+
+  StatefulSet과 Service가 잘 만들어지고 External-IP까지 잘 할당된 것을 볼 수 있습니다. 이제 external-ip를 통해 application에 접속 후 통신이 잘 되는지 확인해보겠습니다.
+
+  ![image-20191208215527254](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208215527254.png)
+
+  통신이 잘 되는것을 볼 수 있습니다. 다음은 전송되는 message들이 DB에 잘 저장되는지 확인해보겠습니다. Kubernetes의 pod에 접근할 때에는 docker 명령어와 동일하게 exec 명령어로 접근 가능합니다.
+
+  ![image-20191208215801017](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208215801017.png)
+
+  DB와 연결이 잘 되는것을 볼 수 있습니다. 다음으로 Kubernetes  Dashboard를 통해 Pod들과 Service들을 확인해보겠습니다.
+
+  ![image-20191208220210914](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208220210914.png)
+
+  Pod들과 StatefulSet, Service들이 잘 생성되고 실행중인 것을 볼 수 있습니다.

@@ -20,8 +20,8 @@
 ### WARNING:
 
 - This application is made my executable on minikube. Please execute this application on minikube.
-- In autobuild.sh, "patch" command in there. It is necessary on minikube, because LoadBalancer in minikube can't set the external IP automatically. So, I used "minikube ip" command for setting external ip to my cluster ip.
-- If you using replicas on this application, it will make an error for that. I think that this error is because of the socket conflict. I'm searching about this error and will solve it soon :X
+- In autobuild.sh, there is"patch" command. It is necessary on minikube, because LoadBalancer in minikube can't set the external IP automatically. So, I used "minikube ip" command for setting external ip to my cluster ip.
+- If you use replicas on this application, it will make an error for that. I think that this error is because of the socket conflict. I'm searching about this error and will solve it soon :X
 
 ### Describe:
 

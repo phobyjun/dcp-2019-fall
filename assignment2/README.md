@@ -13,4 +13,4 @@
 
 ### Describe:
 
-This application is based on Assignment #1. Differences are database and communication between web and database. If the user on socket sends messages on application, it will be transport to database. It is made my multi-container model using customized image based on node.js and MySql.
+- This application is based on Assignment #1. Differences are database and communication between web and database. If the user on socket sends messages on application, it will be transport to database. It is made my multi-container model using customized image based on node.js and MySql.

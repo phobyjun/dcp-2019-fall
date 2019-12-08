@@ -21,4 +21,4 @@
 
 ### Describe:
 
-This application is based on Assignment #2. It simply evolve assignment #2 from 2 containers to 2 machines. So, any function in this assignment is same to assignment #2.
+- This application is based on Assignment #2. It simply evolve assignment #2 from 2 containers to 2 machines. So, any function in this assignment is same to assignment #2.

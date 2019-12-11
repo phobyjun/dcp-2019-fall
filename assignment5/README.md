@@ -1,6 +1,6 @@
-# Data Center Programming Assignment #5
+# Data Center Programming Project #5
 
-2018102211 컴퓨터공학과 윤준석
+2018102211 컴퓨터공학과 윤준석, 데이터센터 프로그래밍 과제 #5입니다.
 
 ## CONTENTS
 
@@ -14,7 +14,7 @@
 
 ## ABSTRACT
 
-- Socket.io를 이용해 간단한 채팅 웹 어플리케이션을 만들어 보았습니다. 사용자들의 채팅 기록과 이름, 시간은 MySql DB에 저장됩니다. 프론트와 백엔드는 하나의 이미지로 구현하였고 DB도 하나의 이미지로 구현하였습니다. Kubernetes에서는 각각의 이미지가 1개의 StatefulSet(pod)과 Service를 가지게 구현했습니다.
+- Socket.io를 이용해 간단한 채팅 웹 어플리케이션을 만들어 보았습니다. 사용자들의 채팅 기록과 이름, 채팅 시간은 MySql DB에 저장됩니다. 프론트와 백엔드는 하나의 이미지로 구현하였고 DB도 하나의 이미지로 구현하였습니다. Kubernetes에서는 각각의 이미지가 1개의 pod과 Service를 가지게 구현했습니다.
 - 이 프로젝트는 Minikube 위에서의 실행을 가정하고 진행되었으며, 다른 Kubernetes engine을 사용 시 제대로 실행이 되지 않을 수 있습니다.
 - 소스 코드는 다음 링크에서 확인할 수 있습니다. [LINK]( https://github.com/phobyjun/dcp-2019-fall/tree/master/ )
 
@@ -110,7 +110,7 @@
     }
     ```
 
-  - views/index.ejs: express 모듈을 사용해 html을 렌더링 하는 파일이며 index.js에서 index.ejs를 불러와 렌더링 및 통신을 수행합니다.
+  - views/index.ejs: express 모듈을 사용해 html을 렌더링 하는 파일이며 index.js에서 index.ejs를 불러와 렌더링 및 소켓 통신을 수행합니다.
 
     ```ejs
     <!DOCTYPE html>
@@ -184,7 +184,7 @@
 
     Dockerfile을 통해 image를 build하며, node.js image를 기반으로 만들었습니다.  8080포트를 통해 통신하며, image 실행 시 "node index.js" 명령어가 자동으로 실행되어 서버가 열립니다.
 
-  - index.js: MySql과의 통신, 서버, 통신을 위한 js 파일입니다.
+  - index.js: MySql과의 통신, 서버, 소켓 통신을 위한 js 파일입니다.
 
     ```js
     const express = require('express');
@@ -270,19 +270,19 @@
 
 - Application 접속 화면은 다음과 같습니다. (mychat 이미지만 실행할 경우 제대로 통신이 되지 않을 수 있으며, 다음 화면은 mydb 이미지와 함께 connecting 했을 때의 실행 화면입니다.)
 
-  ![image-20191208201913348](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208201913348.png)
+  ![1.png](./img/1.png)
 
   이미지 실행 시 외부 포트를 12000번으로 지정해주었고, localhost:12000으로 접속할 수 있습니다.
 
-  ![image-20191208202017419](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208202017419.png)
+  ![2.png](./img/2.png)
 
   사용자는 웹에 접속해 메세지를 보낼 수 있습니다.
 
-  ![image-20191208202305709](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208202305709.png)
+  ![3](./img/3.png)
 
   사용자가 서버에 접속 시 접속 메세지가 뜨고 퇴장 시 퇴장 메세지가 뜨는 것을 볼 수 있습니다.
 
-  ![image-20191208202415879](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208202415879.png)
+  ![4](./img/4.png)
 
 ### mydb
 
@@ -332,7 +332,7 @@
 
 - 컨테이너에 접속하면 다음과 같은 화면을 볼 수 있습니다.
 
-  ![image-20191208203807356](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208203807356.png)
+  ![10](./img/10.png)
 
 ### docker-compose
 
@@ -379,9 +379,13 @@
 
 - docker-compose up![image-20191208205156379](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208205156379.png)
 
-- 메세지 전송이 잘 되는것을 볼 수 있습니다.![image-20191208205349435](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208205349435.png)
+- 메세지 전송이 잘 되는것을 볼 수 있습니다.
 
-- DB와 table이 잘 생성되고 통신 또한 잘 되는것을 볼 수 있습니다.![image-20191208205553543](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208205553543.png)
+  ![5](./img/5.png)
+
+- DB와 table이 잘 생성되고 통신 또한 잘 되는것을 볼 수 있습니다.
+
+  ![6](./img/6.png)
 
 ## Kubernetes Migration
 
@@ -442,7 +446,7 @@
             - containerPort: 8080
     ```
 
-    1개의 Service와 1개의 StatefulSet을 가지며, LoadBalancer를 통해 cluster 외부에 IP와 Port를 노출시켰습니다. Service에 selector에서 mychat을 가져오는데 이는 StatefulSet에 serviceName을 통해 가져올 수 있습니다.
+    1개의 Service와 1개의 StatefulSet을 가지며, LoadBalancer를 통해 cluster 외부에 IP와 Port를 노출시켰습니다. Service에 selector에서 mychat을 가져오는데 이는 StatefulSet의 serviceName을 통해 가져올 수 있습니다.
 
   - mydb.yaml
 
@@ -484,7 +488,7 @@
             - containerPort: 3306
     ```
 
-    mychat과 동일한 구성을 가집니다. containerPort를 3306으로 설정해줘야만 mysql에 접속이 가능합니다.
+    mychat과 동일한 구성을 가집니다. containerPort를 3306으로 설정해줘야만 mychat pod에서mysql에 접속이 가능합니다.
 
   - autobuild.sh
 
@@ -511,18 +515,23 @@
 
 - autobuild.sh 파일을 실행시켜 Kubernetes에서 deploy 해보겠습니다.
 
-  ![image-20191208215225120](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208215225120.png)
+  ![7](./img/7.png)
 
   StatefulSet과 Service가 잘 만들어지고 External-IP까지 잘 할당된 것을 볼 수 있습니다. 이제 external-ip를 통해 application에 접속 후 통신이 잘 되는지 확인해보겠습니다.
 
-  ![image-20191208215527254](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208215527254.png)
+  ![8](./img/8.png)
 
   통신이 잘 되는것을 볼 수 있습니다. 다음은 전송되는 message들이 DB에 잘 저장되는지 확인해보겠습니다. Kubernetes의 pod에 접근할 때에는 docker 명령어와 동일하게 exec 명령어로 접근 가능합니다.
 
-  ![image-20191208215801017](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208215801017.png)
+  ![9](./img/9.png)
 
-  DB와 연결이 잘 되는것을 볼 수 있습니다. 다음으로 Kubernetes  Dashboard를 통해 Pod들과 Service들을 확인해보겠습니다.
+  DB와 연결이 잘 되는것을 볼 수 있습니다. 다음으로 Kubernetes Dashboard를 통해 pod들과 service들을 확인해보겠습니다.
 
-  ![image-20191208220210914](C:\Users\Junseok Yoon\AppData\Roaming\Typora\typora-user-images\image-20191208220210914.png)
+  ![11](./img/11.png)
 
-  Pod들과 StatefulSet, Service들이 잘 생성되고 실행중인 것을 볼 수 있습니다.
+  pod들과 StatefulSet, Service들이 잘 생성되고 실행중인 것을 볼 수 있습니다.
+
+## <번외> Google Kubernetes Engine
+
+Local에서 Minikube로 migration 시 local이 아닌 외부 컴퓨터에서 접속이 되지 않는 현상이 발생했습니다. Ingress로 외부 인터넷에 노출을 해보았지만 역시나 되지 않았습니다. 방화벽이나 인터넷 또는 inbound port의 문제인것 같아 구글링 결과 만족할 만한 답을 얻지 못해 google cloud platform의 gke(google kubernetes engine)에 저의 service를 올려보았고 외부 인터넷에 노출이 목적인 저의 의도를 만족시킬 수 있었습니다.
+

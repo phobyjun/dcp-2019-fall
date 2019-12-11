@@ -1,4 +1,4 @@
-# Data Center Programming Project #5
+# Data Center Programming Assignment #5
 
 2018102211 컴퓨터공학과 윤준석, 데이터센터 프로그래밍 과제 #5입니다.
 
@@ -11,6 +11,7 @@
   - [docker-compose](#docker-compose)
 - [Kubernetes Migration](#Kubernetes-Migration)
 - [<번외> Google Kubernetes Engine](#번외-Google-Kubernetes-Engine)
+- [Sharing class improvement plan](#Sharing-class-improvement-plan)
 
 ## ABSTRACT
 
@@ -486,6 +487,9 @@
             image: yunjun2/mydb:1.0.1
             ports:
             - containerPort: 3306
+          volumes:
+          - name: myvol
+            emptyDir: {}
     ```
 
     mychat과 동일한 구성을 가집니다. containerPort를 3306으로 설정해줘야만 mychat pod에서mysql에 접속이 가능합니다.
@@ -535,3 +539,36 @@
 
 Local에서 Minikube로 migration 시 local이 아닌 외부 컴퓨터에서 접속이 되지 않는 현상이 발생했습니다. Ingress로 외부 인터넷에 노출을 해보았지만 역시나 되지 않았습니다. 방화벽이나 인터넷 또는 inbound port의 문제인것 같아 구글링 결과 만족할 만한 답을 얻지 못해 google cloud platform의 gke(google kubernetes engine)에 저의 service를 올려보았고 만족할 만한 결과를 얻을 수 있었습니다.
 
+[Google Kubernetes Engine]( https://cloud.google.com/kubernetes-engine/?hl=ko )
+
+- gke에 대한 구글의 설명은 다음과 같습니다:
+
+  Google Kubernetes Engine은 신속하고 안정적이며 효율적으로 클러스터를 실행할 수 있습니다. 즉, 컨테이너형 어플리케이션 배포를 위한 관리형 프로덕션 환경이며, 개발자 생산성, 리소스 효율성, 자동화된 작업, 오픈소스 유연성에 혁신을 가져다 줄 수 있습니다. gke를 사용하면 자체 Kubernetes 클러스터를 설치, 관리, 운영할 필요성이 완전히 사라져 Kubernetes를 즉시 실행할 수 있습니다.
+
+> **gke를 사용하기에 앞서 gcp의 application들을 사용하기 위해서는 계정을 등록하고 local에서 auth를 발급받아야 하는 등의 과정이 필요합니다. 여기서는 그러한 과정들을 생략하고 gke에서 클러스터를 생성했다고 가정한 후 진행하겠습니다.**
+
+자신의 목적에 맞는 클러스터를 생성한 후 클러스터 탭을 보면 다음과 같이 자신의 클러스터를 확인할 수 있습니다. 또한 우측 상단에 있는 콘솔 아이콘을 누르면 cloud shell을 열 수 있습니다. 이 cloud shell에서 kubernetes cluster와 관련된 모든 명령어를 입력해 관리할 수 있습니다.
+
+![12](./img/12.png)
+
+cloud shell에 접속하게 되면 다음과 같은 화면을 볼 수 있습니다.
+
+![13](./img/13.png)
+
+service deployment에 필요한 파일들을 `파일 업로드`를 통해 업로드할 수 있습니다. 이제 저의 파일들을 업로드하고 폴더를 만들어 하나의 폴더에 넣어보겠습니다.
+
+![14](./img/14.png)
+
+![15](./img/15.png)
+
+저의 application을 gke에 apply해보겠습니다. cluster의 ip를 수동으로 할당해주지 않아도 LoadBalancer가 자동으로 external-ip를 할당해주는것을 볼 수 있습니다. 이제 외부 인터넷에서 접근이 가능합니다.
+
+![16](./img/16.png)
+
+이제 팀뷰어를 통해 다른 컴퓨터에서도 접근이 가능한지 확인해보겠습니다. 다른 컴퓨터에서도 접속이 잘 되고 DB에도 잘 저장이 되는 것을 볼 수 있습니다.
+
+![17](./img/17.png)
+
+![18](./img/18.png)
+
+이렇게 Google Kubernetes Engine을 이용하면 편리하게 클러스터를 생성 및 관리하고 외부에 IP를 노출할 수 있습니다. 여기까지 저의 프로젝트 #5 였습니다. 감사합니다.

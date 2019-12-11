@@ -25,7 +25,6 @@ spec:
     matchLabels:
       app: mychat
   serviceName: "mychat"
-  replicas: 1 
   template:
     metadata:
       labels:

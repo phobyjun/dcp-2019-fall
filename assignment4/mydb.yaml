@@ -33,3 +33,6 @@ spec:
         image: yunjun2/mydb:1.0.1
         ports:
         - containerPort: 3306
+      volumes:
+      - name: myvol
+        emptyDir: {}

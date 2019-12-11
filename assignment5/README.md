@@ -10,7 +10,7 @@
   - [mydb](#mydb)
   - [docker-compose](#docker-compose)
 - [Kubernetes Migration](#Kubernetes-Migration)
-- [<번외> Google Kubernetes Engine](#<번외>-Google-Kubernetes-Engine)
+- [<번외> Google Kubernetes Engine](#번외-Google-Kubernetes-Engine)
 
 ## ABSTRACT
 
@@ -533,5 +533,5 @@
 
 ## <번외> Google Kubernetes Engine
 
-Local에서 Minikube로 migration 시 local이 아닌 외부 컴퓨터에서 접속이 되지 않는 현상이 발생했습니다. Ingress로 외부 인터넷에 노출을 해보았지만 역시나 되지 않았습니다. 방화벽이나 인터넷 또는 inbound port의 문제인것 같아 구글링 결과 만족할 만한 답을 얻지 못해 google cloud platform의 gke(google kubernetes engine)에 저의 service를 올려보았고 외부 인터넷에 노출이 목적인 저의 의도를 만족시킬 수 있었습니다.
+Local에서 Minikube로 migration 시 local이 아닌 외부 컴퓨터에서 접속이 되지 않는 현상이 발생했습니다. Ingress로 외부 인터넷에 노출을 해보았지만 역시나 되지 않았습니다. 방화벽이나 인터넷 또는 inbound port의 문제인것 같아 구글링 결과 만족할 만한 답을 얻지 못해 google cloud platform의 gke(google kubernetes engine)에 저의 service를 올려보았고 만족할 만한 결과를 얻을 수 있었습니다.
 

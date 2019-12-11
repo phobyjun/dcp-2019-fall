@@ -573,4 +573,4 @@ service deployment에 필요한 파일들을 `파일 업로드`를 통해 업로
 
 ![18](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/18.png)
 
-이렇게 Google Kubernetes Engine을 이용하면 편리하게 클러스터를 생성 및 관리하고 외부에 IP를 노출할 수 있습니다. 여기까지 저의 프로젝트 #5 였습니다. 감사합니다.
+이렇게 Google Kubernetes Engine을 이용하면 편리하게 클러스터를 생성 및 관리하고 외부에 IP를 노출할 수 있습니다.

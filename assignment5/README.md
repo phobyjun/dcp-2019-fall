@@ -11,7 +11,6 @@
   - [docker-compose](#docker-compose)
 - [Kubernetes Migration](#Kubernetes-Migration)
 - [<번외> Google Kubernetes Engine](#번외-Google-Kubernetes-Engine)
-- [Sharing class improvement plan](#Sharing-class-improvement-plan)
 
 ## ABSTRACT
 
@@ -271,19 +270,19 @@
 
 - Application 접속 화면은 다음과 같습니다. (mychat 이미지만 실행할 경우 제대로 통신이 되지 않을 수 있으며, 다음 화면은 mydb 이미지와 함께 connecting 했을 때의 실행 화면입니다.)
 
-  ![1.png](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/1.png )
+  ![1.png](./img/1.png)
 
   이미지 실행 시 외부 포트를 12000번으로 지정해주었고, localhost:12000으로 접속할 수 있습니다.
 
-  ![2.png](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/2.png)
+  ![2.png](./img/2.png)
 
   사용자는 웹에 접속해 메세지를 보낼 수 있습니다.
 
-  ![3](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/3.png)
+  ![3](./img/3.png)
 
   사용자가 서버에 접속 시 접속 메세지가 뜨고 퇴장 시 퇴장 메세지가 뜨는 것을 볼 수 있습니다.
 
-  ![4](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/4.png)
+  ![4](./img/4.png)
 
 ### mydb
 
@@ -333,7 +332,7 @@
 
 - 컨테이너에 접속하면 다음과 같은 화면을 볼 수 있습니다.
 
-  ![10](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/10.png)
+  ![10](./img/10.png)
 
 ### docker-compose
 
@@ -378,17 +377,15 @@
       name: mynet
   ```
 
-- docker-compose up
-
-  ![19](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment/img/19.png)
+- docker-compose up![19](./img/19.png)
 
 - 메세지 전송이 잘 되는것을 볼 수 있습니다.
 
-  ![5](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/5.png)
+  ![5](./img/5.png)
 
 - DB와 table이 잘 생성되고 통신 또한 잘 되는것을 볼 수 있습니다.
 
-  ![6](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/6.png)
+  ![6](./img/6.png)
 
 ## Kubernetes Migration
 
@@ -521,19 +518,19 @@
 
 - autobuild.sh 파일을 실행시켜 Kubernetes에서 deploy 해보겠습니다.
 
-  ![7](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/7.png)
+  ![7](./img/7.png)
 
   StatefulSet과 Service가 잘 만들어지고 External-IP까지 잘 할당된 것을 볼 수 있습니다. 이제 external-ip를 통해 application에 접속 후 통신이 잘 되는지 확인해보겠습니다.
 
-  ![8](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/8.png)
+  ![8](./img/8.png)
 
   통신이 잘 되는것을 볼 수 있습니다. 다음은 전송되는 message들이 DB에 잘 저장되는지 확인해보겠습니다. Kubernetes의 pod에 접근할 때에는 docker 명령어와 동일하게 exec 명령어로 접근 가능합니다.
 
-  ![9](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/9.png)
+  ![9](./img/9.png)
 
   DB와 연결이 잘 되는것을 볼 수 있습니다. 다음으로 Kubernetes Dashboard를 통해 pod들과 service들을 확인해보겠습니다.
 
-  ![11](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/11.png)
+  ![11](./img/11.png)
 
   pod들과 StatefulSet, Service들이 잘 생성되고 실행중인 것을 볼 수 있습니다.
 
@@ -551,26 +548,26 @@ Local에서 Minikube로 migration 시 local이 아닌 외부 컴퓨터에서 접
 
 자신의 목적에 맞는 클러스터를 생성한 후 클러스터 탭을 보면 다음과 같이 자신의 클러스터를 확인할 수 있습니다. 또한 우측 상단에 있는 콘솔 아이콘을 누르면 cloud shell을 열 수 있습니다. 이 cloud shell에서 kubernetes cluster와 관련된 모든 명령어를 입력해 관리할 수 있습니다.
 
-![12](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/12.png)
+![12](./img/12.png)
 
 cloud shell에 접속하게 되면 다음과 같은 화면을 볼 수 있습니다.
 
-![13](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/13.png)
+![13](./img/13.png)
 
 service deployment에 필요한 파일들을 `파일 업로드`를 통해 업로드할 수 있습니다. 이제 저의 파일들을 업로드하고 폴더를 만들어 하나의 폴더에 넣어보겠습니다.
 
-![14](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/14.png)
+![14](./img/14.png)
 
-![15](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/15.png)
+![15](./img/15.png)
 
 저의 application을 gke에 apply해보겠습니다. cluster의 ip를 수동으로 할당해주지 않아도 LoadBalancer가 자동으로 external-ip를 할당해주는것을 볼 수 있습니다. 이제 외부 인터넷에서 접근이 가능합니다.
 
-![16](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/16.png)
+![16](./img/16.png)
 
 이제 팀뷰어를 통해 다른 컴퓨터에서도 접근이 가능한지 확인해보겠습니다. 다른 컴퓨터에서도 접속이 잘 되고 DB에도 잘 저장이 되는 것을 볼 수 있습니다.
 
-![17](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/17.png)
+![17](./img/17.png)
 
-![18](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/18.png)
+![18](./img/18.png)
 
-이렇게 Google Kubernetes Engine을 이용하면 편리하게 클러스터를 생성 및 관리하고 외부에 IP를 노출할 수 있습니다.
+이렇게 Google Kubernetes Engine을 이용하면 편리하게 클러스터를 생성 및 관리하고 외부에 IP를 노출할 수 있습니다. 여기까지 저의 프로젝트 #5 였습니다. 감사합니다.

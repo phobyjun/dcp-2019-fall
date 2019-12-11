@@ -271,7 +271,7 @@
 
 - Application 접속 화면은 다음과 같습니다. (mychat 이미지만 실행할 경우 제대로 통신이 되지 않을 수 있으며, 다음 화면은 mydb 이미지와 함께 connecting 했을 때의 실행 화면입니다.)
 
-  ![1.png](./img/1.png)
+  ![1.png](https://github.com/phobyjun/dcp-2019-fall/blob/master/assignment5/img/1.png )
 
   이미지 실행 시 외부 포트를 12000번으로 지정해주었고, localhost:12000으로 접속할 수 있습니다.
 
